@@ -1,5 +1,5 @@
 ﻿  source.c
-c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(239): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'size_t'
-  c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(239): note: consider using '%zd' in the format string
-c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(222): warning C4101: 'j': unreferenced local variable
+c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(257): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(262): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+c:\users\student\source\repos\cv3\parallelprogramming2\cv3\source.c(286): warning C4101: 'k': unreferenced local variable
   cv3.vcxproj -> C:\Users\student\source\repos\cv3\ParallelProgramming2\x64\Debug\cv3.exe

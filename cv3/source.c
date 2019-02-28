@@ -1,6 +1,8 @@
 #include "omp.h"
 #include "stdio.h"
-#define N 10
+#define N 1000
+
+float A[N * N], B[N * N], C[N * N];
 
 int main() {
 // NOTE: uncomment only portions bounded by " ==== "
@@ -216,11 +218,14 @@ printf_s("%d", a);
 	}
 */
 // ======================================================
+/*
 	omp_set_num_threads(5);
 
 	size_t P[N * N];
 	int i, j;
 	size_t max = 0;
+
+	int t = omp_get_wtime();
 
 	#pragma omp parallel for private(j)
 	for (i = 0; i < N; i++) {
@@ -236,7 +241,70 @@ printf_s("%d", a);
 		}
 	}
 
-	printf("max = %d", max);
+	printf("max = %d, after %d", max, t - omp_get_wtime());
+*/
+// ======================================================
+// Priklad: Nasobenie matic:
+	omp_set_num_threads(5);
+
+	int i, j;
+	#pragma omp parallel for private(j)
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+			#pragma omp critical 
+			{
+				A[N * i + j] = (float)i / (float)(j + 1);
+				B[N * i + j] = (i == j) ? 10. : 0.;
+			}
+		}
+	}
+
+	int t = omp_get_wtime();
+
+	int print = 0;
+
+	// just printing
+	if (print) {
+		for (i = 0; i < N; i++) {
+			for (j = 0; j < N; j++) {
+				printf_s("%.2f ", A[N * i + j]);
+			}
+			printf_s("\n");
+		}
+		printf_s("\n");
+
+		for (i = 0; i < N; i++) {
+			for (j = 0; j < N; j++) {
+				printf_s("%.0f ", B[N * i + j]);
+			}
+			printf_s("\n");
+		}
+		printf_s("\n");
+	}
+
+	// multiplying:
+	int k;
+	#pragma omp parallel for private(j, k)
+	for (i = 0; i < N; i++) {
+		for (j = 0; j < N; j++) {
+			C[i * N + j] = 0.;
+			for (k = 0; k < N; k++) {
+				C[i * N + j] += A[i * N + k] * B[k * N + j];
+			}
+		}
+	}
+
+	// result:
+	if (print) {
+		for (i = 0; i < N; i++) {
+			for (j = 0; j < N; j++) {
+				printf_s("%.0f ", C[N * i + j]);
+			}
+			printf_s("\n");
+		}
+	}
+
+	printf("after %lf", omp_get_wtime() - t);
 
 	getchar();
 }
